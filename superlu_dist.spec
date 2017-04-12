@@ -19,12 +19,11 @@ BuildRequires: scotch-devel gcc-gfortran openblas-devel
 # -lscotchmetis.
 BuildRequires: metis-devel
 
-%bcond_without mpich
-%global mpich mpich
 %ifarch %power64
 %if 0%{?el6}
 %bcond_with mpich
-%global mpich %nil
+%else
+%bcond_without mpich
 %endif
 %endif
 
@@ -185,12 +184,16 @@ esac
 done
 
 %check
+
+# There are SEGVs on koji ppc64le which are probably due to limited stack
+%ifarch %power64
 %if %{with openmpi}
 # just check that it runs
 %_openmpi_load
 pushd EXAMPLE
 mpirun -n 4 ../pddrive -r 2 -c 2 g20.rua
 make clean
+%endif
 %endif
 
 %{!?_licensedir:%global license %doc}
@@ -220,6 +223,9 @@ make clean
 
 
 %changelog
+* Wed Apr 12 2017 Dave Love <loveshack@fedoraproject.org> - 5.1.3-1
+- Exclude check on power64 and fix the mpich conditional
+
 * Wed Mar  8 2017 Dave Love <loveshack@fedoraproject.org> - 5.1.3-1
 - New version
 
