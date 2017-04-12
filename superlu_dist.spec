@@ -187,7 +187,7 @@ done
 
 pushd EXAMPLE
 # There are SEGVs on koji ppc64le which are probably due to limited stack
-%ifarch %power64
+%ifnarch %power64
 %if %{with openmpi}
 # just check that it runs
 %_openmpi_load
