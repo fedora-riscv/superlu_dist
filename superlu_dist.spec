@@ -3,7 +3,7 @@
 
 Name:          superlu_dist
 Version:       5.1.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -185,16 +185,16 @@ done
 
 %check
 
+pushd EXAMPLE
 # There are SEGVs on koji ppc64le which are probably due to limited stack
 %ifarch %power64
 %if %{with openmpi}
 # just check that it runs
 %_openmpi_load
-pushd EXAMPLE
 mpirun -n 4 ../pddrive -r 2 -c 2 g20.rua
+%endif
+%endif
 make clean
-%endif
-%endif
 
 %{!?_licensedir:%global license %doc}
 %if %{with openmpi}
@@ -223,6 +223,9 @@ make clean
 
 
 %changelog
+* Wed Apr 12 2017 Dave Love <loveshack@fedoraproject.org> - 5.1.3-2
+- Fix EXAMPLES clean up
+
 * Wed Apr 12 2017 Dave Love <loveshack@fedoraproject.org> - 5.1.3-1
 - Exclude check on power64 and fix the mpich conditional
 
