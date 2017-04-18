@@ -3,7 +3,7 @@
 
 Name:          superlu_dist
 Version:       5.1.3
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -27,9 +27,10 @@ BuildRequires: metis-devel
 %endif
 %endif
 
-%bcond_without openmpi
 %ifarch s390 s390x
 %bcond_with openmpi
+%else
+%bcond_without openmpi
 %endif
 
 %if %{with openmpi}
@@ -223,6 +224,9 @@ make clean
 
 
 %changelog
+* Tue Apr 18 2017 Dave Love <loveshack@fedoraproject.org> - 5.1.3-3
+- Rebuild for fix to rhbz #1435690
+
 * Wed Apr 12 2017 Dave Love <loveshack@fedoraproject.org> - 5.1.3-2
 - Fix EXAMPLES clean up
 
