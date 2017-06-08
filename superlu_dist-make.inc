@@ -17,8 +17,10 @@
 #
 SuperLUroot	=
 DSUPERLULIB   	= $(SuperLUroot)/SRC/libsuperlu_dist.a
+BLASDEF		= -DUSE_VENDOR_BLAS
+BLASLIB		= -lopenblas
 
-LIBS		= $(DSUPERLULIB) -lptscotchparmetis -lptscotch -lptscotcherr -lmetis -lscotch -lopenblas
+LIBS		= $(DSUPERLULIB) -lptscotchparmetis -lptscotch -lptscotcherr -lmetis -lscotch $(BLASLIB)
 
 #
 #  The archiver and the flag(s) to use when building archive (library)
@@ -29,7 +31,7 @@ ARCHFLAGS    = cr
 RANLIB       = /usr/bin/ranlib
 
 CC           = mpicc
-CFLAGS 	     += -O3 -DNDEBUG  -DUSE_VENDOR_BLAS -DDEBUGlevel=0 -DPRNTlevel=0 -fopenmp -std=c99 -fPIC -g
+CFLAGS 	     += -O3 -DNDEBUG $(BLASDEF) -DDEBUGlevel=0 -DPRNTlevel=0 -fopenmp -std=c99 -fPIC -g
 # CFLAGS       += -D
 # CFLAGS       +=  
 NOOPTS       = -O0

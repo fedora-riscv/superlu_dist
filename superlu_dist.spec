@@ -1,9 +1,16 @@
 # Copyright (c) 2016 Dave Love, Liverpool University
 # MIT licence, per Fedora policy.
 
+%ifarch x86_64 %{ix86} armv7hl %{power64} aarch64
+# matches openblas ExclusiveArch
+%bcond_without openblas
+%else
+%bcond_with openblas
+%endif
+
 Name:          superlu_dist
 Version:       5.1.3
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -14,7 +21,12 @@ Patch1:        superlu_dist-parmetis.patch
 # Zap diagnostics, recommended in
 # <https://math.berkeley.edu/~linlin/pexsi/page_dependency.html>
 Patch2:        superlu_dist-output.patch
-BuildRequires: scotch-devel gcc-gfortran openblas-devel
+Patch3:	       superlu_dist-cblas.patch
+BuildRequires: scotch-devel gcc-gfortran
+%if %{with openblas}
+BuildRequires: openblas-devel
+# Probably not worth a bundled provides for the bundled partial cblas.
+%endif
 # The test program runs if we link with -lmetis but crashes if linked with
 # -lscotchmetis.
 BuildRequires: metis-devel
@@ -124,7 +136,8 @@ This is the mpich version.
 
 %package mpich-devel
 Summary: Development files for %name-mpich
-Requires: mpich-devel%{?_isa}
+# https://bugzilla.redhat.com/show_bug.cgi?id=1397192 (fixed in RHEL 7.4 beta)
+Requires: mpich-devel%{!?el7:%{?_isa}}
 Requires: %name-mpich%{?_isa} = %version-%release
 
 %description mpich-devel
@@ -136,6 +149,7 @@ Development files for %name-mpich
 %setup -q -n SuperLU_DIST_%version
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 cp %SOURCE1 make.inc
 
 %build
@@ -148,13 +162,21 @@ esac
 find -name \*.[oa] | xargs rm 2>/dev/null || true # no clean target
 pwd
 export CFLAGS="%optflags"
+%if %{with openblas}
 make SuperLUroot=$(pwd)
+%else
+make blaslib HEADER=. BLASLIB='../libblas.a'
+make SuperLUroot=$(pwd) BLASDEF= BLASLIB='../libblas.a'
+%endif
 mkdir -p tmp $m
 pushd tmp
 ar x ../SRC/libsuperlu_dist.a
 mpicc -shared -Wl,-soname=libsuperlu_dist.so.%major -Wl,--as-needed \
       -o ../$m/libsuperlu_dist.so.%sover *.o -fopenmp -lptscotchparmetis \
-      -lptscotch -lptscotcherr -lscotch -lmetis -lopenblas \
+      -lptscotch -lptscotcherr -lscotch -lmetis \
+%if %{with openblas}
+      -lopenblas \
+%endif
       %{?__global_ldflags}
 popd
 case $m in
@@ -230,6 +252,10 @@ make clean
 
 
 %changelog
+* Thu Jun  8 2017 Dave Love <loveshack@fedoraproject.org> - 5.1.3-5
+- Fix up mpich-devel requirement for el7 7.3
+- Avoid openblas on s3909(x)
+
 * Sat Jun  3 2017 Dave Love <loveshack@fedoraproject.org> - 5.1.3-4
 - Fix mpich conditional
 - Build for openmpi on s390 f25+
