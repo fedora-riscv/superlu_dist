@@ -1,8 +1,9 @@
 # Copyright (c) 2016 Dave Love, Liverpool University
 # MIT licence, per Fedora policy.
 
-%ifarch x86_64 %{ix86} armv7hl %{power64} aarch64
-# matches openblas ExclusiveArch
+# Following scalapack
+%{!?openblas_arches:%global openblas_arches x86_64 %{ix86} armv7hl %{power64} aarch64}
+%ifarch %{openblas_arches}
 %bcond_without openblas
 %else
 %bcond_with openblas
@@ -10,7 +11,7 @@
 
 Name:          superlu_dist
 Version:       5.1.3
-Release:       5%{?dist}
+Release:       6%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -252,6 +253,9 @@ make clean
 
 
 %changelog
+* Fri Jun  9 2017 Dave Love <loveshack@fedoraproject.org> - 5.1.3-6
+- Maybe use openblas_arches instead
+
 * Thu Jun  8 2017 Dave Love <loveshack@fedoraproject.org> - 5.1.3-5
 - Fix up mpich-devel requirement for el7 7.3
 - Avoid openblas on s3909(x)
