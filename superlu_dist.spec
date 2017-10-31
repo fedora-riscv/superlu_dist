@@ -10,8 +10,8 @@
 %endif
 
 Name:          superlu_dist
-Version:       5.1.3
-Release:       8%{?dist}
+Version:       5.2.2
+Release:       1%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -19,14 +19,10 @@ Source0:       http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_dist_%version.t
 Source1:       superlu_dist-make.inc
 # Make the parmetis support work with Scotch
 Patch1:        superlu_dist-parmetis.patch
-# Zap diagnostics, recommended in
-# <https://math.berkeley.edu/~linlin/pexsi/page_dependency.html>
-Patch2:        superlu_dist-output.patch
-Patch3:	       superlu_dist-cblas.patch
 BuildRequires: scotch-devel gcc-gfortran
 %if %{with openblas}
 BuildRequires: openblas-devel
-# Probably not worth a bundled provides for the bundled partial cblas.
+# [else] Probably not worth a bundled provides for the bundled partial cblas.
 %endif
 # The test program runs if we link with -lmetis but crashes if linked with
 # -lscotchmetis.
@@ -66,7 +62,7 @@ BuildRequires: metis-devel
 # For library soname.  Start at one in case we need the incompatible
 # v4 packaged separately.
 %global major 1
-%global minor 0
+%global minor 1
 %global miner 0
 %global sover %major.%minor.%miner
 
@@ -149,8 +145,6 @@ Development files for %name-mpich
 %prep
 %setup -q -n SuperLU_DIST_%version
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 cp %SOURCE1 make.inc
 
 %build
@@ -173,8 +167,7 @@ mkdir -p tmp $m
 pushd tmp
 ar x ../SRC/libsuperlu_dist.a
 mpicc -shared -Wl,-soname=libsuperlu_dist.so.%major -Wl,--as-needed \
-      -o ../$m/libsuperlu_dist.so.%sover *.o -fopenmp -lptscotchparmetis \
-      -lptscotch -lptscotcherr -lscotch -lmetis \
+      -o ../$m/libsuperlu_dist.so.%sover *.o -fopenmp \
 %if %{with openblas}
       -lopenblas \
 %endif
@@ -253,6 +246,11 @@ make clean
 
 
 %changelog
+* Tue Oct 31 2017 Dave Love <loveshack@fedoraproject.org> - 5.2.2-1
+- New version
+- Drop output and cmake patches
+- Update soname minor version (added function)
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 5.1.3-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
