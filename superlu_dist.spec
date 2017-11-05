@@ -11,7 +11,7 @@
 
 Name:          superlu_dist
 Version:       5.2.2
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -166,8 +166,10 @@ make SuperLUroot=$(pwd) BLASDEF= BLASLIB='../libblas.a'
 mkdir -p tmp $m
 pushd tmp
 ar x ../SRC/libsuperlu_dist.a
-mpicc -shared -Wl,-soname=libsuperlu_dist.so.%major -Wl,--as-needed \
+mpicc -shared -Wl,-soname=libsuperlu_dist.so.%major \
       -o ../$m/libsuperlu_dist.so.%sover *.o -fopenmp \
+       -lptscotchparmetis -lscotchmetis -lscotch -lptscotch \
+       -lptscotcherr -lptscotcherrexit \
 %if %{with openblas}
       -lopenblas \
 %endif
@@ -246,6 +248,9 @@ make clean
 
 
 %changelog
+* Sun Nov  5 2017 Dave Love <loveshack@fedoraproject.org> - 5.2.2-2
+- Link againt ptscothmetis et al
+
 * Tue Oct 31 2017 Dave Love <loveshack@fedoraproject.org> - 5.2.2-1
 - New version
 - Drop output and cmake patches

@@ -20,7 +20,8 @@ DSUPERLULIB   	= $(SuperLUroot)/SRC/libsuperlu_dist.a
 BLASDEF		= -DUSE_VENDOR_BLAS
 BLASLIB		= -lopenblas
 
-LIBS		= $(DSUPERLULIB) -lptscotchparmetis -lptscotch -lptscotcherr -lmetis -lscotch $(BLASLIB)
+LIBS		= $(DSUPERLULIB) -lptscotchparmetis -lmetis -lscotch \
+-lptscotch -lptscotcherr -lptscotcherrexit $(BLASLIB)
 
 #
 #  The archiver and the flag(s) to use when building archive (library)
