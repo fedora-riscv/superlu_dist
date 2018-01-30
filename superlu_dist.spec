@@ -10,15 +10,14 @@
 %endif
 
 Name:          superlu_dist
-Version:       5.2.2
-Release:       2%{?dist}
+Version:       5.3.0
+Release:       1%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
 Source0:       http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_dist_%version.tar.gz
 Source1:       superlu_dist-make.inc
 # Make the parmetis support work with Scotch
-Patch1:        superlu_dist-parmetis.patch
 BuildRequires: scotch-devel gcc-gfortran
 %if %{with openblas}
 BuildRequires: openblas-devel
@@ -62,7 +61,7 @@ BuildRequires: metis-devel
 # For library soname.  Start at one in case we need the incompatible
 # v4 packaged separately.
 %global major 1
-%global minor 1
+%global minor 2
 %global miner 0
 %global sover %major.%minor.%miner
 
@@ -144,7 +143,6 @@ Development files for %name-mpich
 
 %prep
 %setup -q -n SuperLU_DIST_%version
-%patch1 -p1
 cp %SOURCE1 make.inc
 
 %build
@@ -248,6 +246,11 @@ make clean
 
 
 %changelog
+* Tue Jan 30 2018 Dave Love <loveshack@fedoraproject.org> - 5.3.0-1
+- New version
+- Update sovar
+- Drop patch
+
 * Sun Nov  5 2017 Dave Love <loveshack@fedoraproject.org> - 5.2.2-2
 - Link againt ptscothmetis et al
 
