@@ -11,7 +11,7 @@
 
 Name:          superlu_dist
 Version:       5.3.0
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -237,8 +237,11 @@ make clean
 
 
 %changelog
-* Thu Apr 26 2018 Dave Love <loveshack@fedoraproject.org> - 5.3.0-2
+* Thu Apr 26 2018 Dave Love <loveshack@fedoraproject.org> - 5.3.0-3
 - Require ptscotch-mpich-devel-parmetis
+
+* Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 5.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
 * Tue Jan 30 2018 Dave Love <loveshack@fedoraproject.org> - 5.3.0-1
 - New version
