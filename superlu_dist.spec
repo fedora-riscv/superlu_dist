@@ -147,10 +147,10 @@ find -name \*.[oa] | xargs rm 2>/dev/null || true # no clean target
 pwd
 export CFLAGS="%optflags"
 %if %{with openblas}
-make SuperLUroot=$(pwd)
+make SuperLUroot=$(pwd) INCLUDEDIR=$(pwd)/SRC
 %else
-make blaslib HEADER=. BLASLIB='../libblas.a'
-make SuperLUroot=$(pwd) BLASDEF= BLASLIB='../libblas.a'
+make blaslib HEADER=. BLASLIB='../libblas.a' INCLUDEDIR=%_includedir
+make SuperLUroot=$(pwd) BLASDEF= BLASLIB='../libblas.a' INCLUDEDIR=$(pwd)/SRC
 %endif
 mkdir -p tmp $m
 pushd tmp
