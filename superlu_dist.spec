@@ -9,15 +9,21 @@
 %bcond_with openblas
 %endif
 
+%if 0%{?el6}%{?el7}
+# For good enough C++
+%global dts devtoolset-6-
+%endif
+
 Name:          superlu_dist
-Version:       5.4.0
-Release:       3%{?dist}
+Version:       6.0.0
+Release:       1%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
 Source0:       http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_dist_%version.tar.gz
 Source1:       superlu_dist-make.inc
-BuildRequires: scotch-devel gcc-gfortran
+BuildRequires: scotch-devel
+BuildRequires: %{?dts}gcc-gfortran %{?dts}gcc-c++
 %if %{with openblas}
 BuildRequires: openblas-devel
 # [else] Probably not worth a bundled provides for the bundled partial cblas.
@@ -52,7 +58,7 @@ BuildRequires: metis-devel
 # For library soname.  Start at one in case we need the incompatible
 # v4 packaged separately.
 %global major 1
-%global minor 2
+%global minor 3
 %global miner 0
 %global sover %major.%minor.%miner
 
@@ -137,6 +143,7 @@ Development files for %name-mpich
 cp %SOURCE1 make.inc
 
 %build
+%{?dts:source /opt/rh/devtoolset-6/enable}
 # This order to leave openmpi version in place for %%check
 for m in %mpich %openmpi; do
 case $m in
@@ -199,6 +206,7 @@ done
 
 %check
 
+%{?dts:source /opt/rh/devtoolset-6/enable}
 pushd EXAMPLE
 # There are SEGVs on koji ppc64le which are probably due to limited stack
 %ifnarch %power64
@@ -237,6 +245,9 @@ make clean
 
 
 %changelog
+* Wed Nov 21 2018 Dave Love <loveshack@fedoraproject.org> - 6.0.0-1
+- New version
+
 * Thu Jul 19 2018 Sandro Mani <manisandro@gmail.com> - 5.4.0-3
 - Rebuild (scotch)
 
