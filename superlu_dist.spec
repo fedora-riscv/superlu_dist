@@ -13,8 +13,7 @@
 %bcond_with check
 
 %if 0%{?el6}%{?el7}
-# For good enough C++.  DTS6 is better (compatible libgfortran), but
-# gets an ICE on an openmp pragma.
+# For good enough C++
 %global dts devtoolset-7-
 %endif
 
@@ -26,8 +25,10 @@ License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
 Source0:       http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_dist_%version.tar.gz
 Source1:       superlu_dist-make.inc
+# Use CFLAGS in INSTALL/Makefile (was only failing on some targets)
+Patch1:	       superlu_dist-inst.patch
 BuildRequires: scotch-devel
-BuildRequires: %{?dts}gcc-gfortran %{?dts}gcc-c++
+BuildRequires: %{?dts}gcc-c++
 %if %{with openblas}
 BuildRequires: openblas-devel
 # [else] Probably not worth a bundled provides for the bundled partial cblas.
@@ -145,6 +146,8 @@ Development files for %name-mpich
 %prep
 %setup -q -n SuperLU_DIST_%version
 cp %SOURCE1 make.inc
+%patch1 -p1 -b .orig
+
 
 %build
 %{?dts:source /opt/rh/devtoolset-7/enable}
@@ -212,7 +215,7 @@ done
 # can't debug it, so let's hope it doesn't deadlock in realistic
 # situations.
 %if %{with check}
-%{?dts:source /opt/rh/devtoolset-6/enable}
+%{?dts:source /opt/rh/devtoolset-7/enable}
 pushd EXAMPLE
 %if %{with openmpi}
 # just check that it runs
