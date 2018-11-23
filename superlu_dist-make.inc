@@ -32,17 +32,16 @@ ARCHFLAGS    = cr
 RANLIB       = /usr/bin/ranlib
 
 CC           = mpicc
-CFLAGS 	     += -O3 -DNDEBUG $(BLASDEF) -DDEBUGlevel=0 -DPRNTlevel=0 -fopenmp -std=c99 -fPIC -g
+CFLAGS 	     += -O3 -DNDEBUG $(BLASDEF) -DDEBUGlevel=0 -DPRNTlevel=0 -fopenmp -std=c99 -DUSE_VENDOR_BLAS -fPIC
 # CFLAGS       += -D
 # CFLAGS       +=  
 CXX          = mpicxx
-CXXFLAGS     += -O3 -DNDEBUG $(BLASDEF) -DDEBUGlevel=0 -DPRNTlevel=0 -fopenmp -fPIC -g -std=gnu++11
-XSDK_INDEX_SIZE=64
+CXXFLAGS     += -O3 -DNDEBUG $(BLASDEF) -DDEBUGlevel=0 -DPRNTlevel=0 -fopenmp -std=gnu++11 -DUSE_VENDOR_BLAS -fPIC
 HAVE_LAPACK=1
-HAVE_PARMETIS=0
+HAVE_PARMETIS=1
 HAVE_COMBBLAS=0
 NOOPTS       = -O0
 FORTRAN	     = mpif90
 
-LOADER       = $(CXX) -fopenmp
-LOADOPTS     = 
+LOADER       = $(CXX)
+LOADOPTS     = $(LDFLAGS) -fopenmp
