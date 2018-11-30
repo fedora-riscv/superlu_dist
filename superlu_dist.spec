@@ -10,7 +10,7 @@
 %bcond_with openblas
 %endif
 
-%bcond_with check
+%bcond_without check
 
 %if 0%{?el6}%{?el7}
 # For good enough C++
@@ -19,7 +19,7 @@
 
 Name:          superlu_dist
 Version:       6.0.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -252,6 +252,9 @@ make clean
 
 
 %changelog
+* Thu Nov 29 2018 Orion Poplawski <orion@cora.nwra.com> - 6.0.0-2
+- Re-enable tests - seem to be working with openmpi 2.1.6rc1
+
 * Wed Nov 21 2018 Dave Love <loveshack@fedoraproject.org> - 6.0.0-1
 - New version
 - Avoid tests
