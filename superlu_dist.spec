@@ -19,7 +19,7 @@
 
 Name:          superlu_dist
 Version:       6.0.0
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -168,7 +168,7 @@ make SuperLUroot=$(pwd) BLASDEF= BLASLIB='../libblas.a' INCLUDEDIR=$(pwd)/SRC V=
 mkdir -p tmp $m
 pushd tmp
 ar x ../SRC/libsuperlu_dist.a
-mpicc -shared -Wl,-soname=libsuperlu_dist.so.%major \
+mpicxx -shared -Wl,-soname=libsuperlu_dist.so.%major \
       -o ../$m/libsuperlu_dist.so.%sover *.o -fopenmp \
        -lptscotchparmetis -lscotchmetis -lscotch -lptscotch \
        -lptscotcherr -lptscotcherrexit \
@@ -220,12 +220,13 @@ pushd EXAMPLE
 %if %{with openmpi}
 # just check that it runs
 %_openmpi_load
+# Allow for more processes than cores
+export OMPI_MCA_rmaps_base_oversubscribe=1
 mpirun -n 4 ../pddrive -r 2 -c 2 g20.rua
 %endif
 %endif
 make clean
 
-%{!?_licensedir:%global license %doc}
 %if %{with openmpi}
 %files openmpi
 %license License.txt
@@ -252,6 +253,10 @@ make clean
 
 
 %changelog
+* Sun Dec 16 2018 Orion Poplawski <orion@cora.nwra.com> - 6.0.0-3
+- libsuperlu_dist is a C++ library, link with mpicxx
+- Allow oversubscription with openmpi in tests
+
 * Thu Nov 29 2018 Orion Poplawski <orion@cora.nwra.com> - 6.0.0-2
 - Re-enable tests - seem to be working with openmpi 2.1.6rc1
 
