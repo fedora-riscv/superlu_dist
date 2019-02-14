@@ -19,7 +19,7 @@
 
 Name:          superlu_dist
 Version:       6.1.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -253,6 +253,9 @@ make clean
 
 
 %changelog
+* Thu Feb 14 2019 Orion Poplawski <orion@nwra.com> - 6.1.0-2
+- Rebuild for openmpi 3.1.3
+
 * Sun Feb 03 2019 Antonio Trande <sagitter@fedoraproject.org> - 6.1.0-1
 - Release 6.1.0
 
