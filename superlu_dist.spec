@@ -105,7 +105,9 @@ This is the openmpi version.
 
 %package openmpi-devel
 Summary: Development files for %name-openmpi
-BuildRequires: openmpi-devel ptscotch-openmpi-devel-parmetis
+# ptscotch-openmpi-devel-parmetis is missing from RHEL8 for some reason
+# https://bugzilla.redhat.com/show_bug.cgi?id=1750180
+BuildRequires: openmpi-devel %{!?el8:ptscotch-openmpi-devel-parmetis}
 BuildRequires: ptscotch-openmpi-devel
 Requires: openmpi-devel%{?_isa}
 Requires: %name-openmpi%{?_isa} = %version-%release
