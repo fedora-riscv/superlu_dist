@@ -18,8 +18,8 @@
 %endif
 
 Name:          superlu_dist
-Version:       6.1.0
-Release:       3%{?dist}
+Version:       6.1.1
+Release:       1%{?dist}
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -255,6 +255,9 @@ make clean
 
 
 %changelog
+* Thu Sep 12 2019 Dave Love <loveshack@fedoraproject.org> - 6.1.1-1
+- New version
+
 * Sat Jul 27 2019 Fedora Release Engineering <releng@fedoraproject.org> - 6.1.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
