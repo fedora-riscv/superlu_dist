@@ -22,7 +22,7 @@ Name:          superlu_dist
 # superlu_defs.h:94:10: fatal error: superlu_FortranCInterface.h: No such file or directory
 # 6.3.1 has API/ABI change
 Version:       6.1.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 Epoch:	       1
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
@@ -259,7 +259,7 @@ make clean
 
 
 %changelog
-* Mon Apr 13 2020 Dave Love <loveshack@fedoraproject.org> - 1:6.1.1-2
+* Mon Apr 13 2020 Dave Love <loveshack@fedoraproject.org> - 1:6.1.1-3
 - Introduce epoch and revert incompatible change to 6.3.1
 
 * Thu Apr  9 2020 Dave Love <loveshack@fedoraproject.org> - 6.3.1-1
