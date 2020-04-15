@@ -18,8 +18,12 @@
 %endif
 
 Name:          superlu_dist
-Version:       6.3.1
-Release:       1%{?dist}
+# 6.2.0 fails with
+# superlu_defs.h:94:10: fatal error: superlu_FortranCInterface.h: No such file or directory
+# 6.3.1 has API/ABI change
+Version:       6.1.1
+Release:       2%{?dist}
+Epoch:	       1
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
 URL:           http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
@@ -110,7 +114,7 @@ Summary: Development files for %name-openmpi
 BuildRequires: openmpi-devel %{!?el8:ptscotch-openmpi-devel-parmetis}
 BuildRequires: ptscotch-openmpi-devel
 Requires: openmpi-devel%{?_isa}
-Requires: %name-openmpi%{?_isa} = %version-%release
+Requires: %name-openmpi%{?_isa} = %epoch:%version-%release
 
 %description openmpi-devel
 Development files for %name-openmpi
@@ -138,7 +142,7 @@ This is the mpich version.
 Summary: Development files for %name-mpich
 Requires: mpich-devel%{?_isa}
 Requires: ptscotch-mpich-devel%{?_isa} ptscotch-mpich-devel-parmetis%{?_isa}
-Requires: %name-mpich%{?_isa} = %version-%release
+Requires: %name-mpich%{?_isa} = %epoch:%version-%release
 
 %description mpich-devel
 Development files for %name-mpich
@@ -255,6 +259,9 @@ make clean
 
 
 %changelog
+* Mon Apr 13 2020 Dave Love <loveshack@fedoraproject.org> - 1:6.1.1-2
+- Introduce epoch and revert incompatible change to 6.3.1
+
 * Thu Apr  9 2020 Dave Love <loveshack@fedoraproject.org> - 6.3.1-1
 - New version
 
