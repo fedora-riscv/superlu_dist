@@ -3,11 +3,12 @@
 # MIT licence, per Fedora policy.
 
 # Following scalapack
-%{!?openblas_arches:%global openblas_arches x86_64 %{ix86} armv7hl %{power64} aarch64}
-%ifarch %{openblas_arches}
-%bcond_without openblas
+%bcond_without optimized_blas
+
+%if 0%{?fedora} >= 33 || 0%{?rhel} >= 9
+%global blaslib flexiblas
 %else
-%bcond_with openblas
+%global blaslib openblas
 %endif
 
 %bcond_without check
@@ -22,7 +23,7 @@ Name:          superlu_dist
 # superlu_defs.h:94:10: fatal error: superlu_FortranCInterface.h: No such file or directory
 # 6.3.1 has API/ABI change
 Version:       6.1.1
-Release:       5%{?dist}
+Release:       6%{?dist}
 Epoch:	       1
 Summary:       Solution of large, sparse, nonsymmetric systems of linear equations
 License:       BSD
@@ -33,8 +34,8 @@ Source1:       superlu_dist-make.inc
 Patch1:	       superlu_dist-inst.patch
 BuildRequires: scotch-devel
 BuildRequires: %{?dts}gcc-c++
-%if %{with openblas}
-BuildRequires: openblas-devel
+%if %{with optimized_blas}
+BuildRequires: %{blaslib}-devel
 # [else] Probably not worth a bundled provides for the bundled partial cblas.
 %endif
 # The test program runs if we link with -lmetis but crashes if linked with
@@ -165,8 +166,8 @@ openmpi) %_openmpi_load ;;
 mpich) %_mpich_load ;;
 esac
 find -name \*.[oa] | xargs rm 2>/dev/null || true # no "clean" target
-%if %{with openblas}
-make SuperLUroot=$(pwd) INCLUDEDIR=$(pwd)/SRC V=1
+%if %{with optimized_blas}
+make SuperLUroot=$(pwd) BLASLIB=-l%{blaslib} INCLUDEDIR=$(pwd)/SRC V=1
 %else
 make blaslib HEADER=. BLASLIB='../libblas.a' INCLUDEDIR=%_includedir V=1
 make SuperLUroot=$(pwd) BLASDEF= BLASLIB='../libblas.a' INCLUDEDIR=$(pwd)/SRC V=1
@@ -176,11 +177,9 @@ pushd tmp
 ar x ../SRC/libsuperlu_dist.a
 mpicxx -shared -Wl,-soname=libsuperlu_dist.so.%major \
       -o ../$m/libsuperlu_dist.so.%sover *.o -fopenmp \
-       -lptscotchparmetis -lscotchmetis -lscotch -lptscotch \
-       -lptscotcherr -lptscotcherrexit \
-%if %{with openblas}
-      -lopenblas \
-%endif
+      -lptscotchparmetis -lscotchmetis -lscotch -lptscotch \
+      -lptscotcherr -lptscotcherrexit \
+      %{?with_optimized_blas:-l%{blaslib}} \
       %{?__global_ldflags}
 popd
 case $m in
@@ -259,6 +258,9 @@ make clean
 
 
 %changelog
+* Fri Aug 28 2020 Iñaki Úcar <iucar@fedoraproject.org> - 1:6.1.1-6
+- https://fedoraproject.org/wiki/Changes/FlexiBLAS_as_BLAS/LAPACK_manager
+
 * Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:6.1.1-5
 - Second attempt - Rebuilt for
   https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
