@@ -32,6 +32,7 @@ Source0:       http://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_dist_%version.t
 Source1:       superlu_dist-make.inc
 # Use CFLAGS in INSTALL/Makefile (was only failing on some targets)
 Patch1:	       superlu_dist-inst.patch
+BuildRequires: make
 BuildRequires: scotch-devel
 BuildRequires: %{?dts}gcc-c++
 %if %{with optimized_blas}
