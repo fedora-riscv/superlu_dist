@@ -18,6 +18,7 @@
 SuperLUroot	=
 DSUPERLULIB   	= $(SuperLUroot)/SRC/libsuperlu_dist.a
 BLASDEF		= -DUSE_VENDOR_BLAS
+BLASLIB		= -lflexiblas
 
 LIBS		= $(DSUPERLULIB) -lptscotchparmetis -lmetis -lscotch \
 -lptscotch -lptscotcherr -lptscotcherrexit $(BLASLIB)
