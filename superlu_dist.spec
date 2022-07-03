@@ -97,8 +97,8 @@ BuildRequires: metis-devel
 %endif
 
 Name: superlu_dist
-Version: 7.2.0
-Release: 3%{?dist}
+Version: 8.0.0
+Release: 1%{?dist}
 Epoch:   1
 
 Summary: Solution of large, sparse, nonsymmetric systems of linear equations
@@ -115,6 +115,8 @@ Patch3: %name-scotch_parmetis.patch
 
 # Longer tests take 1000 sec or timeout, so don't run them
 Patch4: %name-only_short_tests.patch
+
+Patch5: %name-8.0.0-multiple_definitions.patch
 
 BuildRequires: scotch-devel
 BuildRequires: %{?dts}gcc-c++, dos2unix, chrpath
@@ -171,6 +173,7 @@ This is the openmpi version.
 Summary: Development files for %name-openmpi
 Requires: openmpi-devel%{?_isa}
 Requires: %name-openmpi%{?_isa} = %{epoch}:%version-%release
+Provides: %name-openmpi-static = %{epoch}:%version-%release
 
 %description openmpi-devel
 Development files for %name-openmpi
@@ -204,6 +207,7 @@ Summary: Development files for %name-mpich
 Requires: mpich-devel%{?_isa}
 Requires: ptscotch-mpich-devel%{?_isa} ptscotch-mpich-devel-parmetis%{?_isa}
 Requires: %name-mpich%{?_isa} = %{epoch}:%version-%release
+Provides: %name-mpich-static = %{epoch}:%version-%release
 
 %description mpich-devel
 Development files for %name-mpich
@@ -223,6 +227,7 @@ dos2unix CMakeLists.txt
 %patch1 -p1 -b .fix_pkgconfig_creation
 %endif
 %patch4 -p1 -b .only_short_tests
+%patch5 -p1 -b .backup
 
 %build
 %if %{with manual}
@@ -390,7 +395,7 @@ done
 install -m644 SRC/*.h %buildroot$MPI_INCLUDE/superlu_dist/
 rm -rf %buildroot$MPI_LIB/EXAMPLE
 rm -rf %buildroot$MPI_LIB/superlu_dist/FORTRAN/CMakeFiles
-chrpath -r $MPI_LIB %buildroot$MPI_LIB/libsuperlu_dist*
+chrpath -r $MPI_LIB %buildroot$MPI_LIB/libsuperlu_dist*.so*
 %{_openmpi_unload}
 %endif
 
@@ -402,7 +407,7 @@ install -m644 SRC/*.h %buildroot$MPI_INCLUDE/superlu_dist/
 
 rm -rf %buildroot$MPI_LIB/EXAMPLE
 rm -rf %buildroot$MPI_LIB/superlu_dist/FORTRAN/CMakeFiles
-chrpath -r $MPI_LIB %buildroot$MPI_LIB/libsuperlu_dist*
+chrpath -r $MPI_LIB %buildroot$MPI_LIB/libsuperlu_dist*.so*
 %{_mpich_unload}
 %endif
 %endif
@@ -463,6 +468,7 @@ popd
 
 %files openmpi-devel
 %_libdir/openmpi/lib/*.so
+%_libdir/openmpi/lib/*.a
 %if %{with cmake}
 %_libdir/openmpi/lib/pkgconfig/*.pc
 %endif
@@ -480,6 +486,7 @@ popd
 
 %files mpich-devel
 %_libdir/mpich/lib/*.so
+%_libdir/mpich/lib/*.a
 %if %{with cmake}
 %_libdir/mpich/lib/pkgconfig/*.pc
 %endif
@@ -488,6 +495,10 @@ popd
 
 
 %changelog
+* Sun May 29 2022 Antonio Trande <sagitter@fedoraproject.org> - 1:8.0.0-1
+- Release 8.0.0
+- Provide static libraries
+
 * Sat Apr 16 2022 Antonio Trande <sagitter@fedoraproject.org> - 1:7.2.0-3
 - Enable complex16 libraries
 
