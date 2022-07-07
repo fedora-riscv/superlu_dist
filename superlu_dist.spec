@@ -14,18 +14,7 @@
 %bcond_with index64
 %endif
 
-%if 0%{?rhel} && 0%{?rhel} < 7
-%ifarch %power64
-%bcond_with mpich
-%else
 %bcond_without mpich
-%endif
-%endif
-
-%if 0%{?fedora} || 0%{?rhel} >= 7
-%bcond_without mpich
-%endif
-
 %bcond_without openmpi
 
 %if %{with openmpi}
@@ -91,13 +80,13 @@ BuildRequires: metis-devel
 %global METISINC %{_includedir}/metis.h
 %endif
 
-%if 0%{?el6}%{?el7}
+%if 0%{?el7}
 # For good enough C++
 %global dts devtoolset-7-
 %endif
 
 Name: superlu_dist
-Version: 8.0.0
+Version: 8.1.0
 Release: 1%{?dist}
 Epoch:   1
 
@@ -115,8 +104,6 @@ Patch3: %name-scotch_parmetis.patch
 
 # Longer tests take 1000 sec or timeout, so don't run them
 Patch4: %name-only_short_tests.patch
-
-Patch5: %name-8.0.0-multiple_definitions.patch
 
 BuildRequires: scotch-devel
 BuildRequires: %{?dts}gcc-c++, dos2unix, chrpath
@@ -227,7 +214,6 @@ dos2unix CMakeLists.txt
 %patch1 -p1 -b .fix_pkgconfig_creation
 %endif
 %patch4 -p1 -b .only_short_tests
-%patch5 -p1 -b .backup
 
 %build
 %if %{with manual}
@@ -495,6 +481,10 @@ popd
 
 
 %changelog
+* Thu Jul 07 2022 Antonio Trande <sagitter@fedoraproject.org> - 1:8.1.0-1
+- Release 8.1.0
+- Remove obsolete conditional macros
+
 * Sun May 29 2022 Antonio Trande <sagitter@fedoraproject.org> - 1:8.0.0-1
 - Release 8.0.0
 - Provide static libraries
