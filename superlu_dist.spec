@@ -87,7 +87,7 @@ BuildRequires: metis-devel
 
 Name: superlu_dist
 Version: 8.1.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch:   1
 
 Summary: Solution of large, sparse, nonsymmetric systems of linear equations
@@ -481,6 +481,9 @@ popd
 
 
 %changelog
+* Sat Jul 23 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1:8.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
 * Thu Jul 07 2022 Antonio Trande <sagitter@fedoraproject.org> - 1:8.1.0-1
 - Release 8.1.0
 - Remove obsolete conditional macros
