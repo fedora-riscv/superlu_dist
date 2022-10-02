@@ -14,6 +14,6 @@
  
 -Libs: -L${libdir} -lsuperlu_dist
 +Libs: -L@CMAKE_INSTALL_LIBDIR@ -lsuperlu_dist
- Libs.private: @BLAS_LIB@ -lm
+ Libs.private: @BLAS_LIB@ @LAPACK_LIB@ @PARMETIS_LIB@ @COLAMD_LIB@ @COMBBLAS_LIB@ -lm
 -Cflags: -I${includedir}
 +Cflags: -I@CMAKE_INSTALL_INCLUDEDIR@
