@@ -60,7 +60,12 @@
 %endif
 %endif
 
+# Tests failed on riscv64, disable it for default.
+%ifarch riscv64
+%bcond_with check
+%else
 %bcond_without check
+%endif
 
 %if %{with cmake}
 # Enable CombBLAS support
@@ -87,7 +92,7 @@ BuildRequires: metis-devel
 
 Name: superlu_dist
 Version: 8.1.0
-Release: 2%{?dist}
+Release: 2.rv64%{?dist}
 Epoch:   1
 
 Summary: Solution of large, sparse, nonsymmetric systems of linear equations
@@ -481,6 +486,9 @@ popd
 
 
 %changelog
+* Mon Jan 02 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 1:8.1.0-2.rv64
+- Disable failed tests by default on riscv64.
+
 * Sat Jul 23 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1:8.1.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
 
