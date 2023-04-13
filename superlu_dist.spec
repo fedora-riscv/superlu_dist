@@ -200,12 +200,12 @@ Development files for %name-mpich
 
 %if %{with manual}
 cp %SOURCE1 make.inc
-%patch0 -p1 -b .orig
+%patch 0 -p1 -b .orig
 %endif
 
 %if %{with cmake}
 dos2unix CMakeLists.txt
-%patch1 -p1 -b .fix_pkgconfig_creation
+%patch 1 -p1 -b .fix_pkgconfig_creation
 %endif
 %patch4 -p1 -b .only_short_tests
 
@@ -254,7 +254,7 @@ mkdir -p build/openmpi
 export CC=$MPI_BIN/mpicc
 export CXX=$MPI_BIN/mpic++
 export CXXFLAGS="%optflags -I$MPI_INCLUDE"
-export LDFLAGS="%build_ldflags -L$MPI_LIB -lptscotch"
+export LDFLAGS="%build_ldflags -L$MPI_LIB -lptscotch -lptscotcherr -lptscotcherrexit"
 %cmake3 -B build/openmpi -DCMAKE_BUILD_TYPE:STRING=Release \
  -DBUILD_STATIC_LIBS:BOOL=FALSE \
  -DCMAKE_Fortran_COMPILER:FILEPATH=$MPI_BIN/mpifort \
@@ -299,7 +299,7 @@ export CC=$MPI_BIN/mpicc
 export CXX=$MPI_BIN/mpic++
 export CFLAGS="%optflags -DPRNTlevel=0 -DDEBUGlevel=0"
 export CXXFLAGS="%optflags -I$MPI_INCLUDE"
-export LDFLAGS="%build_ldflags -L$MPI_LIB -lptscotch"
+export LDFLAGS="%build_ldflags -L$MPI_LIB -lptscotch -lptscotcherr -lptscotcherrexit"
 %cmake3 -B build/mpich -DCMAKE_BUILD_TYPE:STRING=Release \
  -DBUILD_STATIC_LIBS:BOOL=FALSE \
  -DCMAKE_Fortran_COMPILER:FILEPATH=$MPI_BIN/mpifort \
