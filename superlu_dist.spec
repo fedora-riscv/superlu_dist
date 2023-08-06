@@ -224,6 +224,7 @@ export LDFLAGS="%build_ldflags -L$MPI_LIB -lptscotch -lptscotcherr -lptscotcherr
 
 %make_build V=1 -C build/openmpi
 %{_openmpi_unload}
+%endif
 
 %if %{with mpich}
 %{_mpich_load}
