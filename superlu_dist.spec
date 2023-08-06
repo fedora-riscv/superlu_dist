@@ -78,7 +78,7 @@ BuildRequires: metis-devel
 
 Name: superlu_dist
 Version: 8.1.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 Epoch:   1
 
 Summary: Solution of large, sparse, nonsymmetric systems of linear equations
@@ -419,6 +419,7 @@ make clean
 %{_openmpi_unload}
 %endif
 
+%ifnarch s390x
 %if %{with mpich}
 %{_mpich_load}
 #mpirun -n 4 -v ../build/mpich/EXAMPLE/pddrive -r 2 -c 2 g20.rua
@@ -427,6 +428,7 @@ make clean
 %endif
 %endif
 # CMake build method
+%endif
 %endif
 # Check
 
@@ -466,6 +468,9 @@ make clean
 
 
 %changelog
+* Sun Aug 06 2023 Antonio Trande <sagitter@fedoraproject.org> - 1:8.1.2-4
+- Exclude mpich tests on s390x
+
 * Sat Jul 22 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1:8.1.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
 
