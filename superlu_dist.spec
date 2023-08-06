@@ -328,9 +328,7 @@ chrpath -r $MPI_LIB %buildroot$MPI_LIB/libsuperlu_dist*.so*
 %files openmpi-devel
 %_libdir/openmpi/lib/*.so
 %_libdir/openmpi/lib/*.a
-%if %{with cmake}
 %_libdir/openmpi/lib/pkgconfig/*.pc
-%endif
 %_includedir/openmpi-%_arch/superlu_dist/
 %endif
 
@@ -347,9 +345,7 @@ chrpath -r $MPI_LIB %buildroot$MPI_LIB/libsuperlu_dist*.so*
 %files mpich-devel
 %_libdir/mpich/lib/*.so
 %_libdir/mpich/lib/*.a
-%if %{with cmake}
 %_libdir/mpich/lib/pkgconfig/*.pc
-%endif
 %_includedir/mpich-%_arch/superlu_dist/
 %endif
 
