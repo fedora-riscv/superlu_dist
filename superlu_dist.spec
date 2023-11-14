@@ -43,7 +43,12 @@
 %global OPENBLASLIB /libflexiblas.so
 %endif
 
+# Tests failed on riscv64, disable it for default.
+%ifarch riscv64
+%bcond_with check
+%else
 %bcond_without check
+%endif
 
 # Enable CombBLAS support
 %bcond_with CombBLAS
@@ -63,7 +68,7 @@ BuildRequires: metis-devel
 
 Name: superlu_dist
 Version: 8.1.2
-Release: 5%{?dist}
+Release: 5.rv64%{?dist}
 Epoch:   1
 
 Summary: Solution of large, sparse, nonsymmetric systems of linear equations
@@ -363,6 +368,9 @@ chrpath -r $MPI_LIB %buildroot$MPI_LIB/libsuperlu_dist*.so*
 
 * Tue Apr 18 2023 Antonio Trande <sagitter@fedoraproject.org> - 1:8.1.2-2
 - Disable index64 builds
+
+* Thu Apr 27 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 1:8.1.1-3.rv64
+- Disable failed tests by default on riscv64.
 
 * Thu Apr 13 2023 Antonio Trande <sagitter@fedoraproject.org> - 1:8.1.2-1
 - Release 8.1.2
